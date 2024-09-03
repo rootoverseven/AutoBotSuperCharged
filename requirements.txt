@@ -1,0 +1,9 @@
+pandas
+numpy
+matplotlib
+seaborn
+openpyxl
+python-dotenv
+fyers-apiv3
+requests
+pytz
