@@ -4,6 +4,8 @@ from fyers_apiv3 import fyersModel
 import time
 from datetime import datetime, timedelta
 import openpyxl
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # Configuration variables
 PRIMARY_TIMEFRAME = "5"  # 5-minute candles
@@ -409,6 +411,35 @@ def generate_excel_report(trades):
 
     print(f"Excel report generated: {filename}")
 
+def update_live_chart(symbol, data, entry_price, stop_loss, take_profit):
+    # Create subplot with 2 rows (price and volume)
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, 
+                        vertical_spacing=0.03, subplot_titles=(symbol, 'Volume'),
+                        row_heights=[0.7, 0.3])
+
+    # Add candlestick chart
+    fig.add_trace(go.Candlestick(x=data.index,
+                                 open=data['open'],
+                                 high=data['high'],
+                                 low=data['low'],
+                                 close=data['close'],
+                                 name='Price'))
+
+    # Add volume bar chart
+    fig.add_trace(go.Bar(x=data.index, y=data['volume'], name='Volume'), row=2, col=1)
+
+    # Add entry, stop loss, and take profit lines
+    fig.add_hline(y=entry_price, line_dash="dash", line_color="green", annotation_text="Entry")
+    fig.add_hline(y=stop_loss, line_dash="dash", line_color="red", annotation_text="Stop Loss")
+    fig.add_hline(y=take_profit, line_dash="dash", line_color="blue", annotation_text="Take Profit")
+
+    # Update layout for better readability
+    fig.update_layout(height=800, title_text=f"Live Chart for {symbol}")
+    fig.update_xaxes(rangeslider_visible=False)
+
+    # Show the plot
+    fig.show()
+
 def main():
     print("hello")
     position = 0
@@ -431,6 +462,12 @@ def main():
 
         if position != 0 or order_id is not None:
             print("Trade is ongoing. Checking status.")
+
+            latest_data = get_historical_data(symbol, PRIMARY_TIMEFRAME, 1)  # Get 1 day of recent data
+            
+            # if not latest_data.empty:
+                # Update the live chart
+                # update_live_chart(symbol, latest_data, entry_price, stop_loss, take_profit)
             
             if PAPER_TRADING:
                 current_price = get_current_price(symbol)

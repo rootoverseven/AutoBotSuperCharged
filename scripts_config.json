@@ -1,0 +1,16 @@
+{
+  "scripts": [
+      {
+          "name": "Test Script",
+          "filename": "test.py"
+      },
+      {
+          "name": "Trading Bot",
+          "filename": "test.py"
+      },
+      {
+          "name": "Data Analysis",
+          "filename": "test.py"
+      }
+  ]
+}
