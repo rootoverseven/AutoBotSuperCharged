@@ -1,0 +1,3 @@
+symbol,entry_time,exit_time,entry_price,exit_price,pnl,trade_type,exit_reason,total_capital,tradable_ammount,quantity_bought,trade_ammount,absolute_profit,exit_ammount,charges,net_profit
+TATACONSUM,2024-07-23 13:05:00,2024-07-23 14:55:00,1229.22,1242.75,14.75,long,take_profit,10000.0,5000,20.0,4916.88,295.0,5211.88,27.23754,267.76246
+APOLLOHOSP,2024-08-14 10:40:00,2024-08-14 11:45:00,6837.9,6795.38,-42.51999999999953,long,stop_loss,10267.76246,5000,3.0,4102.74,-127.55999999999858,3975.180000000001,22.7334492,-150.29344919999858
