@@ -255,7 +255,7 @@ def run_backtest(start_date, end_date):
             continue
         print(f"Nifty 50 is currently in a {nifty_trend}.")
 
-        #skip short trades
+        # skip short trades
         if (nifty_trend == "downtrend"):
             current_date += timedelta(minutes=5)
             continue
@@ -275,24 +275,27 @@ def run_backtest(start_date, end_date):
             print(f"Best stock for trading: {symbol} with Total Score: {total_score:.2f}, Trend: {trend}, ATR: {atr:.2f}, Trade Type: {trade_type}")
             current_price = analyze_timeframe(symbol, PRIMARY_TIMEFRAME, current_date)['last_close']
              
-            
+            absolute_profit = 0
+            absolute_loss = 0
+            entry_price = current_price
+            quantity_bought = TRADABLE_AMMOUNT // (entry_price/5)
             if trade_type == "long":
-                entry_price = current_price
                 stop_loss = round(entry_price - atr, 2)
                 take_profit = round(entry_price + (atr * RISK_REWARD_RATIO), 2)
+                absolute_profit = quantity_bought * (take_profit - entry_price)
+                absolute_loss = quantity_bought * (stop_loss - entry_price)
             else:  # short
-                entry_price = current_price
                 stop_loss = round(entry_price + atr, 2)
                 take_profit = round(entry_price - (atr * RISK_REWARD_RATIO), 2)
+                absolute_profit = quantity_bought * (entry_price - take_profit)
+                absolute_loss = quantity_bought * (entry_price - stop_loss)
             
-            quantity_bought = TRADABLE_AMMOUNT // (entry_price/5)
             charges = quantity_bought * (take_profit * 0.00066 + entry_price * 0.00044)
-            absolute_profit = quantity_bought * (take_profit - entry_price)
-            absolute_loss = quantity_bought * (stop_loss - entry_price)
+            
             net_profit = absolute_profit - charges
             net_loss = absolute_loss - charges
             trade_ammount = quantity_bought * entry_price / 5
-            if (net_profit<=0 or net_profit<= 3*abs(net_loss)/2):
+            if (net_profit<=0 or net_profit<= 1.2*abs(net_loss)):
                 current_date += timedelta(minutes=5)
                 continue
 
